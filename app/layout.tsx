@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://luvidra.onwordistevn.chatgpt.site"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "Luvidra — See further. Trade clearer.", template: "%s · Luvidra" },
   description: "Luvidra is an intelligent trading copilot for clearer plan review, risk understanding and decision journaling.",
   keywords: ["trading copilot", "risk management", "trading journal", "Deriv", "MT5"],
-  other: { "codex-preview": "development" },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   openGraph: {
     title: "Luvidra — See further. Trade clearer.",
