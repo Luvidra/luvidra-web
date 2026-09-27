@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const defaultSupabaseUrl = "https://ofteiknckroosldvgvsi.supabase.co";
+const defaultSupabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mdGVpa25ja3Jvb3NsZHZndnNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwODkzMjUsImV4cCI6MjEwNTY2NTMyNX0.lHdpPCEVA1az5Dita4HBc1PegPMQ_9mcgez0i362V8U";
 
 function clean(value: unknown, max = 160) {
   return typeof value === "string" ? value.trim().slice(0, max) : null;
@@ -20,18 +23,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Enter a valid email address." }, { status: 400 });
     }
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !serviceRoleKey) {
-      console.error("Waitlist storage is not configured.");
-      return NextResponse.json({ message: "Waitlist is temporarily unavailable." }, { status: 503 });
-    }
+    const supabaseUrl = process.env.SUPABASE_URL ?? defaultSupabaseUrl;
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY ?? defaultSupabaseAnonKey;
 
     const response = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/waitlist_entries`, {
       method: "POST",
       headers: {
-        apikey: serviceRoleKey,
-        authorization: `Bearer ${serviceRoleKey}`,
+        apikey: supabaseAnonKey,
+        authorization: `Bearer ${supabaseAnonKey}`,
         "content-type": "application/json",
         prefer: "resolution=ignore-duplicates,return=minimal",
       },
