@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         id: crypto.randomUUID(),
         email,
+        status: "subscribed",
         placement: clean(body.placement, 24),
         source: clean(body.source),
         medium: clean(body.medium),
