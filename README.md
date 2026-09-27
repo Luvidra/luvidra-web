@@ -24,9 +24,10 @@ The public marketing and waitlist website for Luvidra, an intelligent trading co
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Public | Canonical production URL for metadata and the sitemap |
 | `SUPABASE_URL` | Server only | Luvidra Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only | Inserts waitlist records while RLS blocks browser access |
+| `SUPABASE_ANON_KEY` | Server only | Optional override for the public insert-only waitlist key |
+| `WAITLIST_RATE_LIMIT_SECRET` | Server only | HMAC secret for privacy-preserving waitlist rate limiting |
 
-Never commit `.env.local` or expose `SUPABASE_SERVICE_ROLE_KEY` through a `NEXT_PUBLIC_` variable.
+Never commit `.env.local` or the rate-limit secret. The waitlist stores only an HMAC fingerprint of the request IP and permits five attempts per 15-minute window.
 
 ## Quality checks
 
