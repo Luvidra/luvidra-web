@@ -48,8 +48,9 @@ const features = [
 function Logo() {
   return (
     <span className="brand-lockup" aria-label="Luvidra">
-      <span aria-hidden="true" className="brand-mark"><span /></span>
-      <span className="brand-name">LUVIDRA</span>
+      <span aria-hidden="true" className="brand-asset">
+        <Image src="/luvidra-logo.png" alt="" width={233} height={155} />
+      </span>
     </span>
   );
 }
@@ -86,7 +87,6 @@ export default function Home() {
           <div className="stage-orbit orbit-two" aria-hidden="true" />
           <div className="prototype-label">Product prototype</div>
           <div className="phone-shell">
-            <div className="phone-speaker" aria-hidden="true" />
             <Image
               src="/luvidra-home.png"
               alt="Luvidra home screen prototype showing account status, risk context and a review insight"

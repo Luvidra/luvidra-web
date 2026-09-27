@@ -53,27 +53,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-bottom: 1px solid var(--line);
 }
 .logo-link { justify-self: start; }
-.brand-lockup { display: inline-flex; align-items: center; gap: 11px; }
-.brand-name { font-size: 16px; font-weight: 800; letter-spacing: .26em; line-height: 1; }
-.brand-mark { position: relative; width: 30px; height: 31px; display: inline-block; }
-.brand-mark::before {
-  content: "";
-  position: absolute;
-  inset: 2px 13px 1px 2px;
-  background: var(--white);
-  clip-path: polygon(0 0, 100% 20%, 100% 68%, 72% 61%, 72% 30%, 35% 23%, 35% 80%, 100% 91%, 76% 100%, 0 81%);
-}
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 7px;
-  width: 18px;
-  height: 22px;
-  background: var(--blue);
-  clip-path: polygon(0 0, 40% 10%, 40% 56%, 100% 71%, 60% 100%, 0 75%);
-}
-.brand-mark span { position: absolute; z-index: 2; width: 5px; height: 12px; right: 0; top: 4px; background: var(--mint); transform: skewY(-27deg); }
+.brand-lockup { display: inline-flex; align-items: center; }
+.brand-asset { position: relative; width: 164px; height: 37px; display: block; overflow: hidden; }
+.brand-asset img { position: absolute; max-width: none; left: -34px; top: -31px; width: 233px; height: 155px; }
 .nav-links { display: flex; align-items: center; gap: 34px; font-size: 14px; color: #bdc8d8; }
 .nav-links a, footer a { transition: color 160ms ease; }
 .nav-links a:hover, footer a:hover { color: var(--white); }
@@ -137,13 +119,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .form-success span { color: #8fb5aa; font-size: 12px; }
 .hero-note { margin: 14px 0 0 7px; color: #718399; font-size: 12px; }
 
-.product-stage { position: relative; min-height: 580px; display: flex; align-items: center; justify-content: center; }
+.product-stage { position: relative; min-height: 700px; display: flex; align-items: center; justify-content: center; }
 .stage-orbit { position: absolute; border: 1px solid rgba(93, 144, 216, .13); border-radius: 50%; transform: rotate(-16deg); }
 .orbit-one { width: 530px; height: 390px; }
 .orbit-two { width: 680px; height: 510px; opacity: .55; }
-.phone-shell { position: relative; z-index: 2; width: 310px; height: 580px; overflow: hidden; padding: 7px; border: 1px solid rgba(183, 210, 240, .32); border-radius: 42px; background: #020b15; box-shadow: 0 40px 90px rgba(0, 0, 0, .46), 0 0 80px rgba(23, 107, 255, .12); transform: rotate(2.2deg); }
+.phone-shell { position: relative; z-index: 2; width: 310px; aspect-ratio: 853 / 1844; overflow: hidden; padding: 7px; border: 1px solid rgba(183, 210, 240, .32); border-radius: 42px; background: #020b15; box-shadow: 0 40px 90px rgba(0, 0, 0, .46), 0 0 80px rgba(23, 107, 255, .12); transform: rotate(2.2deg); }
 .phone-shell img { width: 100%; height: auto; border-radius: 34px; }
-.phone-speaker { position: absolute; z-index: 3; top: 15px; left: 50%; width: 88px; height: 22px; transform: translateX(-50%); border-radius: 99px; background: #02070e; }
 .prototype-label { position: absolute; z-index: 4; top: 18px; right: 34px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 99px; background: rgba(7, 17, 31, .86); color: #9eb0c6; font: 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-transform: uppercase; letter-spacing: .09em; }
 .clarity-card { position: absolute; z-index: 4; display: grid; gap: 5px; min-width: 160px; padding: 14px 16px; border: 1px solid rgba(159, 192, 230, .2); border-radius: 12px; background: rgba(7, 20, 35, .88); box-shadow: 0 18px 50px rgba(0, 0, 0, .3); backdrop-filter: blur(12px); }
 .clarity-card span { color: #7e91a8; font: 10px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace; text-transform: uppercase; letter-spacing: .12em; }
@@ -246,7 +227,8 @@ footer > div { display: flex; gap: 22px; align-items: center; font-size: 12px; }
 @media (max-width: 640px) {
   .nav-shell, .hero, .principles, .problem-section, .workflow-section, .trust-section, .faq-section, .final-cta, footer { width: min(100% - 32px, 1180px); }
   .nav-shell { min-height: 72px; }
-  .brand-name { font-size: 14px; }
+  .brand-asset { width: 142px; height: 32px; }
+  .brand-asset img { left: -29px; top: -27px; width: 202px; height: 135px; }
   .nav-cta { padding: 0 13px; font-size: 12px; }
   .nav-cta svg { display: none; }
   .hero { min-height: auto; gap: 28px; padding: 55px 0 64px; }
@@ -255,8 +237,8 @@ footer > div { display: flex; gap: 22px; align-items: center; font-size: 12px; }
   .email-row { grid-template-columns: 1fr; gap: 6px; }
   .email-row button { width: 100%; }
   .hero-note { line-height: 1.5; }
-  .product-stage { min-height: 570px; overflow: hidden; }
-  .phone-shell { width: 278px; height: 520px; }
+  .product-stage { min-height: 650px; overflow: hidden; }
+  .phone-shell { width: 278px; }
   .prototype-label { top: 6px; right: 2px; }
   .clarity-card { display: none; }
   .orbit-one { width: 470px; }
