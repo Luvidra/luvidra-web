@@ -11,6 +11,26 @@ function json(message: string, status = 200) {
   return Response.json({ message }, { status });
 }
 
+async function requestFingerprint(request: Request, secret: string | undefined) {
+  const forwardedFor =
+    request.headers.get("x-vercel-forwarded-for") ??
+    request.headers.get("x-forwarded-for") ??
+    "";
+  const ip = forwardedFor.split(",")[0]?.trim();
+  if (!ip || !secret) throw new Error("Waitlist rate-limit configuration is missing.");
+
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(ip));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 export async function handleWaitlistRequest(
   request: Request,
   fetchRequest: typeof fetch = fetch,
@@ -26,6 +46,7 @@ export async function handleWaitlistRequest(
 
     const supabaseUrl = process.env.SUPABASE_URL ?? defaultSupabaseUrl;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY ?? defaultSupabaseAnonKey;
+    const fingerprint = await requestFingerprint(request, process.env.WAITLIST_RATE_LIMIT_SECRET);
 
     const response = await fetchRequest(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/rpc/join_waitlist`, {
       method: "POST",
@@ -37,6 +58,7 @@ export async function handleWaitlistRequest(
       body: JSON.stringify({
         p_id: crypto.randomUUID(),
         p_email: email,
+        p_fingerprint: fingerprint,
         p_placement: clean(body.placement, 24),
         p_source: clean(body.source),
         p_medium: clean(body.medium),
@@ -48,6 +70,15 @@ export async function handleWaitlistRequest(
 
     if (!response.ok) {
       console.error("Supabase waitlist insert failed", response.status, await response.text());
+      return json("We couldn’t save your email. Please try again.", 503);
+    }
+
+    const result = (await response.json()) as unknown;
+    if (result === "rate_limited") {
+      return json("Too many attempts. Please try again in 15 minutes.", 429);
+    }
+    if (result !== "accepted") {
+      console.error("Unexpected Supabase waitlist response", result);
       return json("We couldn’t save your email. Please try again.", 503);
     }
 
