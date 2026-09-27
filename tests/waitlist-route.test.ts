@@ -27,9 +27,9 @@ async function withFetch(
 test("persists a normalized valid email before reporting success", async () => {
   await withFetch(async (_input, init) => {
     const row = JSON.parse(String(init?.body));
-    assert.equal(row.email, "new.user@example.com");
-    assert.equal(row.status, "subscribed");
-    return new Response(null, { status: 201 });
+    assert.equal(row.p_email, "new.user@example.com");
+    assert.match(String(_input), /\/rest\/v1\/rpc\/join_waitlist$/);
+    return Response.json(true);
   }, async () => {
     const response = await handleWaitlistRequest(request({ email: " New.User@Example.com ", placement: "hero" }));
     assert.equal(response.status, 200);
@@ -37,10 +37,9 @@ test("persists a normalized valid email before reporting success", async () => {
   });
 });
 
-test("accepts a duplicate when the database confirms conflict-ignore success", async () => {
-  await withFetch(async (_input, init) => {
-    assert.match(String(new Headers(init?.headers).get("prefer")), /resolution=ignore-duplicates/);
-    return new Response(null, { status: 201 });
+test("accepts a duplicate when the database function confirms success", async () => {
+  await withFetch(async () => {
+    return Response.json(true);
   }, async () => {
     const response = await handleWaitlistRequest(request({ email: "existing@example.com" }));
     assert.equal(response.status, 200);
