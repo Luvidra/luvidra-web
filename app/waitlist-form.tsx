@@ -5,6 +5,8 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 type State = "idle" | "submitting" | "success" | "error";
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function WaitlistForm({ placement }: { placement: "hero" | "footer" }) {
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
@@ -13,6 +15,20 @@ export function WaitlistForm({ placement }: { placement: "hero" | "footer" }) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
+    const email = String(data.get("email") ?? "").trim().toLowerCase();
+
+    if (!email) {
+      setState("error");
+      setMessage("Enter your email address.");
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      setState("error");
+      setMessage("Enter a valid email address.");
+      return;
+    }
+
     const params = new URLSearchParams(window.location.search);
     setState("submitting");
     setMessage("");
@@ -22,7 +38,7 @@ export function WaitlistForm({ placement }: { placement: "hero" | "footer" }) {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          email: data.get("email"),
+          email,
           website: data.get("website"),
           placement,
           source: params.get("utm_source") ?? document.referrer ?? "direct",
