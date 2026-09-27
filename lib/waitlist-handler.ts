@@ -27,23 +27,21 @@ export async function handleWaitlistRequest(
     const supabaseUrl = process.env.SUPABASE_URL ?? defaultSupabaseUrl;
     const supabaseAnonKey = process.env.SUPABASE_ANON_KEY ?? defaultSupabaseAnonKey;
 
-    const response = await fetchRequest(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/waitlist_entries`, {
+    const response = await fetchRequest(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/rpc/join_waitlist`, {
       method: "POST",
       headers: {
         apikey: supabaseAnonKey,
         authorization: `Bearer ${supabaseAnonKey}`,
         "content-type": "application/json",
-        prefer: "resolution=ignore-duplicates,return=minimal",
       },
       body: JSON.stringify({
-        id: crypto.randomUUID(),
-        email,
-        status: "subscribed",
-        placement: clean(body.placement, 24),
-        source: clean(body.source),
-        medium: clean(body.medium),
-        campaign: clean(body.campaign),
-        consented_at: new Date().toISOString(),
+        p_id: crypto.randomUUID(),
+        p_email: email,
+        p_placement: clean(body.placement, 24),
+        p_source: clean(body.source),
+        p_medium: clean(body.medium),
+        p_campaign: clean(body.campaign),
+        p_consented_at: new Date().toISOString(),
       }),
       cache: "no-store",
     });
